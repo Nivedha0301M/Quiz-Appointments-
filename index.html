@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bank Exam Quiz</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+}
+
+#timer{
+    position:sticky;
+    top:0;
+    background:#222;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:22px;
+    border-radius:10px;
+    margin-bottom:20px;
+    z-index:100;
+}
+
+.question{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.question h3{
+    margin-bottom:15px;
+}
+
+.option{
+    display:block;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.option:hover{
+    background:#f0f0f0;
+}
+
+.selected{
+    background:#cfe2ff;
+    border:2px solid #0d6efd;
+}
+
+.mark-btn{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#ff9800;
+    color:white;
+}
+
+.marked{
+    background:#ffcc80 !important;
+}
+
+.review-marked{
+    background:#e0e0e0 !important;
+    border:2px solid #9e9e9e;
+}
+
+.clear-btn{
+    margin-top:10px;
+    margin-left:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#dc3545;
+    color:white;
+}
+
+.clear-btn:hover{
+    background:#c82333;
+}
+
+.submit-btn{
+    width:100%;
+    padding:15px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:#28a745;
+    color:white;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+.submit-btn:hover{
+    background:#218838;
+}
+
+.result-box{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.review-btn{
+    padding:12px 20px;
+    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    background:#007bff;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.review-question{
+    background:white;
+    padding:20px;
+    margin:20px 0;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
+}
+
+.unanswered{
+    color:orange;
+    font-weight:bold;
+}
+
+.correct-answer{
+    background:#d4edda;
+    padding:10px;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Bank Exam MCQ Quiz</h1>
+
+<div id="timer">Time Left: 15:00</div>
+
+<div id="quiz"></div>
+
+<button class="submit-btn" onclick="submitQuiz()">
+Submit Quiz
+</button>
+
+</div>
+
+<script>
+
+// ===============================
+// QUESTIONS AREA
+// ===============================
+
+const questions = [
+
+
+{q:"Uchral Nyam-Osor was elected as the Prime Minister (PM) of Mongolia after succeeding whom in the top leadership position?", options:["Ukhnaagiin Khurelsukh","Zandanshatar Gombojav","Luvsannamsrain Oyun-Erdene","Khaltmaagiin Battulga"], answer:1},
+
+{q:"Vir Vikram Yadav was appointed as the Director General (DG) of the Directorate General of Civil Aviation (DGCA), succeeding which official?", options:["Arun Kumar","Faiz Ahmed Kidwai","Rajiv Bansal","Rohit Nandan"], answer:1},
+
+{q:"William Walsh was appointed as the Chief Executive Officer (CEO) of IndiGo, replacing which outgoing CEO?", options:["Ronojoy Dutta","Pieter Elbers","Rahul Bhatia","Sanjiv Kapoor"], answer:1},
+
+{q:"Lieutenant General Dhiraj Seth Pal Singh was appointed as the Vice Chief of Army Staff (VCOAS) of the Indian Army after succeeding:", options:["Upendra Dwivedi","Manoj Pande","Lt Gen Pushpendra Singh","Lt Gen NS Raja Subramani"], answer:2},
+
+{q:"Min Aung Hlaing was elected as the President of Myanmar by the Myanmar Parliament after securing how many votes out of 584?", options:["398 votes","429 votes","451 votes","472 votes"], answer:1},
+
+{q:"Krishna Kumar Singh was given interim charge as Chairman and Managing Director (CMD) of Steel Authority of India Limited (SAIL) after succeeding:", options:["Amarendu Prakash","Soma Mondal","Anil Kumar Chaudhary","Atul Bhatt"], answer:0},
+
+{q:"Burra Vamsi Rama Mohan was approved as the CMD of POWERGRID by which authority?", options:["Appointments Committee of the Cabinet (ACC)","Ministry of Power","Central Vigilance Commission (CVC)","Public Enterprises Selection Board (PESB)"], answer:0},
+
+{q:"Tô Lâm was re-elected as the President of Vietnam for which tenure period?", options:["2024–29","2025–30","2026–31","2027–32"], answer:2},
+
+{q:"UB Pravin Rao was appointed as the Chairperson of Nasscom Foundation after succeeding whom?", options:["Debjani Ghosh","Rekha Menon","Rostow Ravanan","Rajesh Nambiar"], answer:2},
+
+{q:"Sanjay Khanna was appointed as CMD of BPCL after approval by which body?", options:["RBI","ACC","SEBI","CCI"], answer:1},
+
+{q:"Ismaïl Omar Guelleh was re-elected as the President of Djibouti for which consecutive term?", options:["Fourth term","Fifth term","Sixth term","Seventh term"], answer:2},
+
+{q:"Nizar Mohammed Saeed Amedi became the President of Iraq after succeeding:", options:["Barham Salih","Abdul Latif Rashid","Mohammed Shia’ Al Sudani","Fuad Hussein"], answer:1},
+
+{q:"Samrat Choudhary was sworn in as the Chief Minister (CM) of Bihar after succeeding which veteran leader?", options:["Jitan Ram Manjhi","Tejashwi Yadav","Nitish Kumar","Sushil Kumar Modi"], answer:2},
+
+{q:"Anant Swarup was appointed as the Secretary General of FICCI and is best known as a:", options:["Former RBI official","Former bureaucrat","Former SEBI chairman","Retired diplomat"], answer:1},
+
+{q:"Vibha Padalkar was reappointed as the MD & CEO of HDFC Life for what tenure period?", options:["2 years","3 years","4 years","5 years"], answer:3},
+
+{q:"Debasish Panda was appointed as the part-time Chairman of Bandhan Bank for what duration?", options:["1 year","2 years","3 years","5 years"], answer:2},
+
+{q:"John Ternus was appointed as the CEO of Apple Inc. after succeeding whom?", options:["Craig Federighi","Tim Cook","Jeff Williams","Luca Maestri"], answer:1},
+
+{q:"Following the appointment of John Ternus as CEO, Tim Cook assumed which additional role at Apple?", options:["Executive Chairman","Chief Strategy Officer","Non-Executive Director","Global Technology Advisor"], answer:0},
+
+{q:"Dinesh Trivedi was appointed as India’s High Commissioner to Bangladesh after succeeding:", options:["Vikram Doraiswami","Indra Mani Pandey","Pranay Verma","Harsh Vardhan Shringla"], answer:2},
+
+{q:"Vivek Tripathi was appointed as the Whole-Time Director of AU Small Finance Bank by which institution?", options:["NABARD","RBI","SIDBI","SEBI"], answer:1},
+
+{q:"B Ramesh Babu was reappointed as the MD & CEO of Karur Vysya Bank (KVB) after succeeding:", options:["P.R. Seshadri","Ramesh Lakshminarayanan","Satish Kumar Kalra","S Ramesh"], answer:0},
+
+{q:"Parminder Singh was appointed as CEO of Reliance Enterprise Intelligence Ltd (REIL) with a focus on:", options:["Renewable energy expansion","Enterprise AI adoption","Semiconductor exports","Retail banking transformation"], answer:1},
+
+{q:"Justice Lisa Gill became the first woman Chief Justice (CJ) of which High Court?", options:["Madras High Court","Punjab & Haryana High Court","Andhra Pradesh High Court","Telangana High Court"], answer:2},
+
+{q:"Justice Lisa Gill succeeded which judge as the Chief Justice of Andhra Pradesh High Court?", options:["Justice Alok Aradhe","Justice Dhiraj Singh Thakur","Justice Satish Chandra Sharma","Justice Ritu Bahri"], answer:1},
+
+{q:"Ashok Kumar Lahiri was appointed as Vice Chairman of NITI Aayog after succeeding:", options:["Rajiv Kumar","Suman Bery","Arvind Panagariya","Bibek Debroy"], answer:1},
+
+{q:"Dilip Kumar was appointed as Chief Vigilance Officer (CVO) of SAIL and belongs to which service?", options:["IAS","IPS","IRSME","IFS"], answer:2},
+
+{q:"Sanjay Jumar was appointed as the first CEO of which metro organisation?", options:["Kochi Metro Rail Limited","Chennai Metro Rail Corporation","Delhi Metro Rail Corporation International","DMIL"], answer:3},
+
+{q:"Anuragha Narayana Das was appointed as the Controller General of Defence Accounts (CGDA) under which ministry?", options:["Ministry of Finance","Ministry of Defence","Ministry of Home Affairs","Ministry of Personnel"], answer:1},
+
+{q:"Vishvajit Sahay was appointed as Secretary (Defence Finance) in which ministry?", options:["Ministry of External Affairs","Ministry of Home Affairs","Ministry of Defence","Ministry of Commerce and Industry"], answer:2},
+
+{q:"Bharat Khera was appointed as Secretary in which Union Ministry?", options:["Ministry of MSME","Ministry of Skill Development","Ministry of Heavy Industries","Ministry of Corporate Affairs"], answer:0},
+
+{q:"Ravi K became the 22nd CMD of Hindustan Aeronautics Limited (HAL) after succeeding:", options:["D.K. Sunil","R Madhavan","CB Ananthakrishnan","S Christopher"], answer:0},
+
+{q:"Rohit Jain was appointed as Deputy Governor of the Reserve Bank of India (RBI) for what tenure period?", options:["2 years","3 years","4 years","5 years"], answer:1},
+
+{q:"Rohit Jain succeeded which outgoing RBI Deputy Governor?", options:["Michael Patra","T. Rabi Sankar","M Rajeshwar Rao","Swaminathan J"], answer:1},
+
+{q:"Prasoon Joshi Sehgal was appointed as Chairman of Prasar Bharati by which ministry?", options:["Ministry of Information & Broadcasting","Ministry of Electronics & IT","Ministry of Culture","Ministry of Parliamentary Affairs"], answer:0},
+
+{q:"The position of Chairman of Prasar Bharati, to which Prasoon Joshi Sehgal was appointed, had remained vacant since:", options:["June 2024","January 2025","December 2025","March 2026"], answer:2},
+
+{q:"Justice Anupinder Singh Grewal was appointed as Member of which tribunal?", options:["NCLAT","CAT","NCLT","SAT"], answer:2},
+
+{q:"Vir Vikram Yadav was appointed as DG of DGCA, which was established in which year?", options:["1927","1935","1948","1956"], answer:0},
+
+{q:"Which among the following correctly matches the appointee with the organisation appointed to?", options:["Vibha Padalkar – Bandhan Bank","Ravi K – HAL","UB Pravin Rao – RBI","Parminder Singh – BPCL"], answer:1},
+
+{q:"Which of the following appointments was made by the Reserve Bank of India (RBI)?", options:["Sanjay Khanna as CMD of BPCL","Vivek Tripathi as Whole-Time Director of AU Small Finance Bank","Ashok Kumar Lahiri as Vice Chairman of NITI Aayog","Anant Swarup as Secretary General of FICCI"], answer:1},
+
+{q:"Which among the following personalities was appointed to a banking institution in a leadership role?", options:["Rohit Jain – RBI","Parminder Singh – REIL","Debasish Panda – Bandhan Bank","Sanjay Jumar – DMIL"], answer:2},
+
+];
+
+// ===============================
+// VARIABLES
+// ===============================
+
+let userAnswers = new Array(questions.length).fill(null);
+
+let markedForReview = new Array(questions.length).fill(false);
+
+let submitted = false;
+
+// ===============================
+// LOAD QUIZ
+// ===============================
+
+function loadQuiz(){
+
+    const quizDiv = document.getElementById("quiz");
+
+    questions.forEach((question,index)=>{
+
+        const qDiv = document.createElement("div");
+
+        qDiv.classList.add("question");
+
+        qDiv.id = `question_${index}`;
+
+        qDiv.innerHTML = `
+        <h3>Q${index+1}. ${question.q}</h3>
+        `;
+
+        question.options.forEach((option,optIndex)=>{
+
+            const opt = document.createElement("div");
+
+            opt.classList.add("option");
+
+            opt.innerText = option;
+
+            opt.onclick = ()=>selectOption(index,optIndex,opt);
+
+            opt.id = `q${index}_opt${optIndex}`;
+
+            qDiv.appendChild(opt);
+
+        });
+
+        // Mark Button
+
+        const markBtn = document.createElement("button");
+
+        markBtn.innerText = "Mark For Review";
+
+        markBtn.classList.add("mark-btn");
+
+        markBtn.onclick = ()=>toggleMark(index,markBtn);
+
+        qDiv.appendChild(markBtn);
+
+        // Clear Button
+
+        const clearBtn = document.createElement("button");
+
+        clearBtn.innerText = "Clear";
+
+        clearBtn.classList.add("clear-btn");
+
+        clearBtn.onclick = ()=>clearAnswer(index);
+
+        qDiv.appendChild(clearBtn);
+
+        quizDiv.appendChild(qDiv);
+
+    });
+
+}
+
+// ===============================
+// SELECT OPTION
+// ===============================
+
+function selectOption(qIndex,optIndex,element){
+
+    if(submitted) return;
+
+    userAnswers[qIndex] = optIndex;
+
+    const options = document.querySelectorAll(`[id^="q${qIndex}_opt"]`);
+
+    options.forEach(opt=>{
+        opt.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+
+}
+
+// ===============================
+// MARK FOR REVIEW
+// ===============================
+
+function toggleMark(index,button){
+
+    markedForReview[index] = !markedForReview[index];
+
+    const questionBox = document.getElementById(`question_${index}`);
+
+    if(markedForReview[index]){
+
+        button.classList.add("marked");
+
+        button.innerText = "Marked For Review";
+
+        questionBox.classList.add("review-marked");
+
+    }else{
+
+        button.classList.remove("marked");
+
+        button.innerText = "Mark For Review";
+
+        questionBox.classList.remove("review-marked");
+
+    }
+
+}
+
+// ===============================
+// CLEAR ANSWER
+// ===============================
+
+function clearAnswer(index){
+
+    if(submitted) return;
+
+    userAnswers[index] = null;
+
+    const options = document.querySelectorAll(`[id^="q${index}_opt"]`);
+
+    options.forEach(opt=>{
+        opt.classList.remove("selected");
+    });
+
+}
+
+// ===============================
+// SUBMIT QUIZ
+// ===============================
+
+function submitQuiz(){
+
+    if(submitted) return;
+
+    submitted = true;
+
+    clearInterval(timer);
+
+    let score = 0;
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    let unansweredCount = 0;
+
+    questions.forEach((question,index)=>{
+
+        const userAns = userAnswers[index];
+
+        if(userAns === null){
+
+            unansweredCount++;
+
+        }
+        else if(userAns === question.answer){
+
+            score += 1;
+            correctCount++;
+
+        }
+        else{
+
+            score -= 0.25;
+            wrongCount++;
+
+        }
+
+    });
+
+    let attempted = correctCount + wrongCount;
+
+    let accuracy = attempted > 0
+    ? ((correctCount/attempted)*100).toFixed(2)
+    : 0;
+
+    document.body.innerHTML = `
+
+    <div class="container">
+
+        <div class="result-box">
+
+            <h1>Quiz Submitted ✅</h1>
+
+            <h2>Total Score: ${score.toFixed(2)}</h2>
+
+            <h3>Correct Answers: ${correctCount}</h3>
+
+            <h3>Wrong Answers: ${wrongCount}</h3>
+
+            <h3>Unanswered Questions: ${unansweredCount}</h3>
+
+            <h3>Accuracy: ${accuracy}%</h3>
+
+            <button class="review-btn" onclick="reviewAnswers()">
+            Review Answers
+            </button>
+
+            <div id="reviewSection"></div>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+// ===============================
+// REVIEW ANSWERS
+// ===============================
+
+function reviewAnswers(){
+
+    const reviewSection = document.getElementById("reviewSection");
+
+    let html = `<h1 style="margin-top:40px;">Review Section</h1>`;
+
+    questions.forEach((question,index)=>{
+
+        const userAns = userAnswers[index];
+
+        let status = "";
+        let marks = "";
+
+        if(userAns === null){
+
+            status = `<span class="unanswered">Unanswered</span>`;
+            marks = `0 Marks`;
+
+        }
+        else if(userAns === question.answer){
+
+            status = `<span class="correct">Correct ✅</span>`;
+            marks = `+1 Mark`;
+
+        }
+        else{
+
+            status = `<span class="wrong">Wrong ❌</span>`;
+            marks = `-0.25 Mark`;
+
+        }
+
+        html += `
+
+        <div class="review-question">
+
+            <h3>Q${index+1}. ${question.q}</h3>
+
+            <p>${status}</p>
+
+            <p><b>Marks:</b> ${marks}</p>
+
+            <p>
+            <b>Your Answer:</b>
+            ${
+                userAns === null
+                ? "Not Attempted"
+                : question.options[userAns]
+            }
+            </p>
+
+            <div class="correct-answer">
+            <b>Correct Answer:</b>
+            ${question.options[question.answer]}
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    reviewSection.innerHTML = html;
+
+}
+
+// ===============================
+// TIMER
+// ===============================
+
+let time = 900;
+
+const timer = setInterval(()=>{
+
+    let minutes = Math.floor(time/60);
+
+    let seconds = time%60;
+
+    document.getElementById("timer").innerText =
+    `Time Left: ${minutes}:${seconds<10 ? '0'+seconds : seconds}`;
+
+    time--;
+
+    if(time < 0){
+
+        clearInterval(timer);
+
+        alert("Time is up! Quiz auto-submitted.");
+
+        submitQuiz();
+
+    }
+
+},1000);
+
+// ===============================
+
+loadQuiz();
+
+</script>
+
+</body>
+</html>
